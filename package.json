@@ -1,0 +1,12 @@
+{
+  "name": "cloud-shell",
+  "version": "1.0.0",
+  "description": "网页远程执行命令，跑在 GitHub Actions macos-14 云端 runner 上",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
