@@ -1,0 +1,31 @@
+name: Cloud Shell (macos-14)
+on:
+  repository_dispatch:
+    types: [cloud-shell]
+
+jobs:
+  run-cmd:
+    runs-on: macos-14
+    timeout-minutes: 55
+    steps:
+      - name: Execute command
+        id: run
+        env:
+          USER_CMD: ${{ github.event.client_payload.cmd }}
+        run: |
+          set +e
+          if [ -z "$USER_CMD" ]; then
+            echo "命令为空" > result.txt
+            exit 0
+          fi
+          OUTPUT=$(bash -c "$USER_CMD" 2>&1)
+          CODE=$?
+          printf 'exit_code=%s\n===== 输出 =====\n%s\n' "$CODE" "$OUTPUT" > result.txt
+          echo "命令已执行，退出码 $CODE"
+
+      - name: Upload result
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmd-result
+          path: result.txt
+          if-no-files-found: warn
